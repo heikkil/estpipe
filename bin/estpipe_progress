@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+
+
+# summarize estpipe output file estpipe_log
+# use for estpipe v.0.3
+
+use strict;
+use warnings;
+
+my $file = shift;
+$file ||= 'work/estpipe.log';
+open LOG, "<", $file  or die "Can't open file $file: $!";
+
+my ($c, $count, $mito, $short, $repeatmasker) = (0, 0, 0, 0, 0);
+my %genes;
+print "\n";
+while (<LOG>){
+    print if /^Date:/;
+    $count++ if /#(\d+)/;
+    $c++ if /writing dbest/;
+    $mito++ if /matches mito/;
+    $short++ if /skipped, high/;
+    $repeatmasker++ if /RepeatM/;
+
+    #SEP15 (UniProtKB/Swiss-Prot:O60613)
+    $genes{$1}++ if /UniProtKB.*:(\w+)/;
+
+}
+
+print "Now : ", `date`, "\n";
+printf "%15s: %5d\n", 'ESTs scanned', $count;
+printf "%15s: %5d\n", 'ESTs kept', $c;
+printf "%15s: %5d-\n", 'Repeatmasked', $repeatmasker;
+printf "%15s: %5d-\n", 'Short', $short;
+printf "%15s: %5d-\n", 'Mitchondrial', $mito;
+printf "%15s: %5d\n", 'Genes', scalar keys %genes;

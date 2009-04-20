@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+
+
+use 5.8.0;  # recent perl to avoid surprises
+
+use Bio::SeqIO;
+use Data::Dumper;
+
+#use Getopt::Long;
+#use Text::Wrap;
+#use XML::Simple;
+
+use strict;
+use warnings;
+
+my $NOLOG = 0;
+my $file = shift;
+
+#my $LOGFILE = "detect_repeats_log_$$";
+#open LOG, ">", $LOGFILE  or die "Can't open file $LOGFILE: $!";
+#print LOG "Date: ". `date` unless $NOLOG;
+
+print "Date: ". `date` unless $NOLOG;
+
+my $in = Bio::SeqIO->new(-file => $file,
+                         -format => 'Fasta');
+my $out = Bio::SeqIO->new(-format => 'Fasta', -flush => 0);
+
+while ( my $seq = $in->next_seq() ) {
+
+        my $seq2string = $seq->seq;
+        $seq2string =~ s/N//g;
+        my ($len) =  length $seq2string;
+        #print $seq->id, ": ", $seq->length, " -> ", $len, "\n"
+        #    if $len < 64;
+        if ($len < 64) {
+#            print LOG $seq->id, ": ". "skipped, high complexity seq shorter than 64 nt [$len]\n" and next
+            print $seq->id, ": ". "skipped, high complexity seq shorter than 64 nt [$len]\n" and next
+                unless $NOLOG;
+            next;
+        }
+
+#        $out->write_seq($seq);
+
+
+}
+
+
+#print LOG "Date: ". `date` unless $NOLOG;
+print "Date: ". `date` unless $NOLOG;

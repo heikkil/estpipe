@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+
+# print out smaller sections of the dbest file
+# name files according the library
+
+use strict;
+use warnings;
+
+
+my $size = 10000; # no of entries in one file.
+my $counter = 1;
+local $/= "||\n";
+
+
+my $file = shift;
+open F, $file or die "Can't open [$file]: $!";
+
+
+open OUT, ">$file.$counter"
+    or die "Can't open [$file.$counter] for writing: $!";
+
+print "\twriting into $file.$counter\n";
+
+while (<F>) {
+
+    print OUT;
+    unless ($.%$size) {
+        close OUT;
+        $counter++;
+	open OUT, ">$file.$counter"
+	    or die "$file.$counter] for writing: $!";
+	print "\twriting into $file.$counter\n";
+    }
+    #print ">$file.$counter\n"
+}
+
+
+
+print "
+
+    Make sure you have created the dbEST lib file!
+
+
+";

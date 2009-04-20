@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+# print out smaller sections of the dbest file
+# name files according the library
+
+use strict;
+use warnings;
+
+use lib 'lib';
+use Libraryname;
+
+my$res = set_libraryname();
+if ($res) {
+    print "\tLibraryname set to [". get_libraryname. "]\n";
+} else {
+    print "\tLibraryname NOT set. Is is already [". get_libraryname. "]\n";
+}
+

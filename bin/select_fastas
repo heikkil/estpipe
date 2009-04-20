@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+
+# select only the sequences with ids matching the first file
+# works also for quality files
+
+
+# input1 is the fasta/qual file with ids to select
+# input2 is the fasta/qual file
+
+use strict;
+use warnings;
+
+use Data::Dumper;
+
+my $DEBUG = 0;
+
+
+
+my $F = shift;
+open F , $F or die "Could not open id file";
+
+my %ids;
+while (<F>) {
+    next unless /^>/;
+    my $id = $1 if />([^ ]+)/;
+    $ids{$id}++;
+}
+close F;
+
+
+#print Dumper \%ids;
+#exit;
+
+
+
+my $F2 = shift;
+open F2 , $F2 or die "Could not open the fasta file";
+
+
+local $/= "\n>";
+
+
+while (<F2>) {
+
+    my ($id) = $_ =~ /^>?(\d+)/;
+    print if $ids{$id};
+}
+

@@ -1,0 +1,39 @@
+<config name="estpipe" version="0.3.0">
+
+  <blastdir></blastdir>
+
+  <contamination type="exonerate">
+    <program>exonerate</program>
+    <query name="gnl|uv|NGB00064.1:1-44 Stratagene ZAP Library Adaptor nonomer">CTCGTGCCGAATTCGGCACGAG</query>
+    <database>-</database>
+    <options> --showalignment no </options>
+  </contamination>
+
+  <mitochondria type="blast">
+    <program>blastn</program>
+    <database>data/humanmito.fa</database>
+    <format note="-m">8</format>
+    <options> </options>
+    <cutoff>
+       <e_value>1e-10</e_value>
+      <count>1</count>
+    </cutoff>
+  </mitochondria>
+
+  <proteome type="blast">
+    <program>blastx</program>
+    <database>data/uniprot_human.fa</database>
+    <database>-</database>
+    <format note="-m">0</format>
+    <options> -b 6 -v 12 -W 3 -f 20 </options>
+    <cutoff>
+       <bit_score>100</bit_score>
+    </cutoff>
+  </proteome>
+
+  <primer>
+    <forward>CCAGGGTTTTCCCAGTCACG</forward>
+    <reverse>TTTTTTTTTTTTTTTTTV</reverse>
+  </primer>
+
+</config>

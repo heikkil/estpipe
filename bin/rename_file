@@ -1,0 +1,23 @@
+#!/usr/bin/env perl
+
+# 
+# 
+
+use strict;
+use warnings;
+
+use lib 'lib';
+use Libraryname;
+use File::Basename;
+
+
+my $file = shift;
+
+die "[$file] does not exist!" unless -e $file;
+
+my ($name, $path ) = fileparse($file);
+my $newname = $path. get_libraryname. ".$name";
+
+rename $file, $newname;
+print "\t$file -> $newname\n";
+

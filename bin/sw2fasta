@@ -1,0 +1,63 @@
+#!/usr/bin/env perl
+
+=head1 NAME
+
+sw2fasta - swissprot to fasta converter that keeps the gene name
+
+=head1 SYNOPSIS
+
+B<sw2fasta> [B<--version> | [B<-?|-h|--help>] | [B<-d|--debug>] |
+  uniprot_sequencefile databasename
+
+
+=head1 DESCRIPTION
+
+Recommended database names:
+
+  UniProtKB/Swiss-Prot
+  UniProtKB/TrEMBL
+
+
+=cut
+
+
+use Bio::SeqIO;
+use Data::Dumper;
+
+use strict;
+use warnings;
+
+local $/ = "\/\/\n";
+
+my $file = shift;
+die "Usage: sw2fasta.pl fastafile dbname\n" unless $file;
+my $db = shift;
+$db = 'db='. $db;
+
+if ($file =~ /\.gz$/) {
+    open FA, "zcat $file|";
+} else {
+    open FA, $file;
+}
+
+while (<FA>) {
+    #print;
+
+    my ($id) = /AC   ([A-Z\d]+)/;   #AC   P31946
+    print and die "Not a UniProt sequence?" unless $id;
+
+    my ($gn) = /GN   Name=([^;,]+)/;   ##GN   Name=YWHAB;
+
+    my ($sq) = /SQ   SEQUENCE[^\n]+.(.*)\n\/\//s;
+    $sq =~ s/ //g;
+
+    ($gn) = /GN   ORFNames=([^\/,;]+)/  # GN   ORFNames=AD-013, x0008;
+        unless $gn;
+    $gn ||= '';
+
+#    print "$id  $gn\n" unless $gn;
+
+    print ">$id gn=$gn; $db\n$sq\n";
+#    last;
+}
+
