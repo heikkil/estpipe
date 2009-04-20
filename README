@@ -1,0 +1,173 @@
+ESTpipe v0.4
+
+ESTpipe is a pipeline for cleaning, annotating and submitting baboon
+EST sequences into dbEST.
+
+It is used in research for NIH grant "Baboon cDNA
+sequencing" ( 1 R24 RR021863-01A1, CFDA No. 93.389,  2007-2010)
+
+Many things have been hard coded in it in this initial submission, but
+it can be easily modified to do process other ESTs.
+
+The small test files that form part of the distribution, need to
+written over by real data files. Once set up, the pipeline for one EST
+library can be run by 'make'.
+
+You can try:
+
+  make -s; make clean
+
+When make runs without error, you have installed all the dependencies
+and can start processing real data.
+
+
+DIRECTORY STRUCTURE
+
+Since make is particular about identifying the files by their name and
+location, it is important to understand the directories used:
+
+
+data	    reference sequences
+raw	    where EST files are placed for processing
+work	    all intermediate files are created here
+done	    final output files are place here
+
+The flow of EST sequence data is:
+
+  raw  -> work -> done
+
+bin    programmes that make the pipeline
+lib    library code for programmes
+t      test for the library 
+       (passing the tests depends on state of files in directories)
+
+
+
+DEPENDENCIES
+
+The following programs have to be installed for the pipeline to run
+
+perl	      recent perl (5.8.0) is recommended
+BioPerl	      use 1.6 release or a more recent SNV copy
+	      http://www.bioperl.org/wiki/Getting_BioPerl
+RepeatMasker  http://www.repeatmasker.org/RMDownload.html
+CrossMatch    http://www.phrap.org
+mdust	      http://compbio.dfci.harvard.edu/tgi/software/
+NCBI BLAST    blastall and formatdb are used
+     	      http://www.ncbi.nlm.nih.gov/BLAST/download.shtml
+
+Note: If you have RepeatMasker/CrossMatch installed on other machine,
+there are trick for importing the processed sequence file.
+
+
+PREPARE THE UNIPROT DATABASE
+
+Copy the latest human swissprot and trembl files into data directory
+using these names:
+
+  data/uniprot_sprot_human.dat.gz
+  data/uniprot_trembl_human.dat.gz
+
+Make note of the release number for your records.
+
+These files need to be preprocessed so that the header will contain
+information about the source database.
+
+To process these files and format the combined blast database run:
+
+  make formatdb
+
+The data directory also contains the human mitochondrial reference
+sequence. If that needs to be updated, replace it with identically
+named file (humanmito.fa) and this step will reformat that database,
+too.
+
+
+COPY THE EST FILES
+
+The fasta and quality files for the EST library need to be placed in
+the raw directory:
+
+  raw/bab.fa
+  raw/bab.qual
+
+The quality file is not currently used by the pipeline, but is
+processed to remove the sames sequences as from the fasta file that
+were found out to be too short, repetitive or contain mitochondial
+sequences.
+
+The pipeline is dependent on finding meta information about the
+sequence and the library from the fasta header. See the example fasta
+file.
+
+
+FIND REPEAT ONLY SEQUENCES
+
+RepeatMasker/CrossMatch is run as part of the pipeline.
+
+However, if you have it installed on a different machine, the
+processed file can be copied into:
+
+  raw/bab.fa.masked
+
+This is the default setup. See the Makefile for details on
+RepeatMasker command line options to use when running it.
+
+
+RUN
+
+At the root directory type: 
+
+  make
+
+Running removes all non-informative and contaminating sequences from
+the final output.
+
+The most time consuming step is the run the programme bin/estpipe that
+does sequentially comparisons to reference sequences using BLAST using
+BLAST. A detailed log is written to 'work/estpipe.log'. Any time
+during the execution, you can analyse the log:
+
+  work/estpipe_progress
+
+
+
+OUTPUT
+
+
+The output is written into the done directory. All files are named
+according to the EST library name. This was parsed from the fasta header.
+
+An example listing of the final files in the output directory, 'done':
+
+  BABEVCEREB-C-01-1-7KB.dbest.1.gz  BABEVCEREB-C-01-1-7KB.dbest.7.gz
+  BABEVCEREB-C-01-1-7KB.dbest.2.gz  BABEVCEREB-C-01-1-7KB.dbest.gz
+  BABEVCEREB-C-01-1-7KB.dbest.3.gz  BABEVCEREB-C-01-1-7KB.fasta.gz
+  BABEVCEREB-C-01-1-7KB.dbest.4.gz  BABEVCEREB-C-01-1-7KB.lib.gz
+  BABEVCEREB-C-01-1-7KB.dbest.5.gz  BABEVCEREB-C-01-1-7KB.qual.gz
+  BABEVCEREB-C-01-1-7KB.dbest.6.gz
+
+The BABEVCEREB-C-01-1-7KB EST library has been written into
+correspondingly named fasta, quality and dbEST files.
+
+Importantly, the single dbEST file has been split into smaller files
+each containing maximum of 10,000 entries that can be mailed as
+attachments to dbEST (batch-sub@ncbi.nlm.nih.gov).
+
+Note that the dbEST lib file in this output was not created
+automatically. You have to do it manually.  See the dbEST submission
+documentation for details.
+
+
+
+
+LICENSE
+
+ESTpipe is licensed under the same terms as Perl itself, which means
+it is dually-licensed under either the Artistic or GPL licenses.
+
+
+
+
+Heikki Lehvaslaiho
+20 April 2009
