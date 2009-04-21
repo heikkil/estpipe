@@ -588,10 +588,6 @@ while ( my $seq = $in->next_seq() ) {
 	next;
     }
 
-    # write sequence into an other file
-    $out->write_seq($seq);
-
-
 
     #human_mitochondrial hits are skipped
     if (human_mitochondria($CONFIG->{mitochondria}, $seq) ) {
@@ -600,6 +596,8 @@ while ( my $seq = $in->next_seq() ) {
 	next;
     }
 
+    # write sequence into an other file
+    $out->write_seq($seq);
 
 
     # run the blast search against every human protein

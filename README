@@ -20,6 +20,15 @@ You can try:
 When make runs without error, you have installed all the dependencies
 and can start processing real data.
 
+ANALYSIS STEPS
+
+1. Reject sequences with less than 64 informative residues after masking
+2. Remove linkers from the ends (currently disabled because not needed)
+3. Reject sequences with a match to human michondrial genome
+4. Find a human protein homolog
+5. Write out in dbEST submission format
+6. Process the quality file to match rejected ESTs
+
 
 DIRECTORY STRUCTURE
 
@@ -57,7 +66,7 @@ NCBI BLAST    blastall and formatdb are used
      	      http://www.ncbi.nlm.nih.gov/BLAST/download.shtml
 
 Note: If you have RepeatMasker/CrossMatch installed on other machine,
-there are trick for importing the processed sequence file.
+there is a trick for importing the processed sequence file.
 
 
 PREPARE THE UNIPROT DATABASE
@@ -157,8 +166,6 @@ attachments to dbEST (batch-sub@ncbi.nlm.nih.gov).
 Note that the dbEST lib file in this output was not created
 automatically. You have to do it manually.  See the dbEST submission
 documentation for details.
-
-
 
 
 LICENSE
