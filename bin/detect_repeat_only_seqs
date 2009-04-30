@@ -14,6 +14,10 @@ use strict;
 use warnings;
 
 my $NOLOG = 0;
+my $LIMIT = shift;
+$LIMIT ||= 64;
+die "First agrument has to positive integer" unless $LIMIT =~ /^\d+$/;
+
 my $file = shift;
 
 #my $LOGFILE = "detect_repeats_log_$$";
@@ -32,10 +36,10 @@ while ( my $seq = $in->next_seq() ) {
         $seq2string =~ s/N//g;
         my ($len) =  length $seq2string;
         #print $seq->id, ": ", $seq->length, " -> ", $len, "\n"
-        #    if $len < 64;
-        if ($len < 64) {
-#            print LOG $seq->id, ": ". "skipped, high complexity seq shorter than 64 nt [$len]\n" and next
-            print $seq->id, ": ". "skipped, high complexity seq shorter than 64 nt [$len]\n" and next
+        #    if $len < $LIMIT;
+        if ($len < $LIMIT) {
+#            print LOG $seq->id, ": ". "skipped, high complexity seq shorter than $LIMIT nt [$len]\n" and next
+            print $seq->id, ": ". "skipped, high complexity seq shorter than $LIMIT nt [$len]\n" and next
                 unless $NOLOG;
             next;
         }
