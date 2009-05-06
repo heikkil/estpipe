@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use strict;
+use warnings;
 
 use 5.8.0;  # recent perl to avoid surprises
 
@@ -13,16 +15,12 @@ use Data::Dumper;
 use strict;
 use warnings;
 
-my $NOLOG = 0;
+my $NOLOG = 1;
 my $LIMIT = shift;
 $LIMIT ||= 64;
-die "First agrument has to positive integer" unless $LIMIT =~ /^\d+$/;
+die "First agrument has to be a positive integer" unless $LIMIT =~ /^\d+$/;
 
 my $file = shift;
-
-#my $LOGFILE = "detect_repeats_log_$$";
-#open LOG, ">", $LOGFILE  or die "Can't open file $LOGFILE: $!";
-#print LOG "Date: ". `date` unless $NOLOG;
 
 print "Date: ". `date` unless $NOLOG;
 
@@ -34,21 +32,17 @@ while ( my $seq = $in->next_seq() ) {
 
         my $seq2string = $seq->seq;
         $seq2string =~ s/N//g;
+	$seq->seq($seq2string);
         my ($len) =  length $seq2string;
         #print $seq->id, ": ", $seq->length, " -> ", $len, "\n"
         #    if $len < $LIMIT;
         if ($len < $LIMIT) {
-#            print LOG $seq->id, ": ". "skipped, high complexity seq shorter than $LIMIT nt [$len]\n" and next
             print $seq->id, ": ". "skipped, high complexity seq shorter than $LIMIT nt [$len]\n" and next
                 unless $NOLOG;
             next;
         }
-
-#        $out->write_seq($seq);
-
+        $out->write_seq($seq);
 
 }
 
-
-#print LOG "Date: ". `date` unless $NOLOG;
 print "Date: ". `date` unless $NOLOG;

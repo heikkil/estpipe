@@ -61,7 +61,7 @@ $(WORKDIR)/bab.fa.masked: $(RAWDIR)/bab.fa $(RAWDIR)/bab.fa.masked
 
 # apply rule that there has to be at least 64 nt of nonrepeat sequence
 $(WORKDIR)/repeat_ids: $(WORKDIR)/bab.fa.masked
-	$(BINDIR)/detect_repeat_only_seqs 64 $(WORKDIR)/bab.fa.masked > $(WORKDIR)/repeat_ids
+	$(BINDIR)/detect_repeat_only_seqs 25 $(WORKDIR)/bab.fa.masked > $(WORKDIR)/repeat_ids
 
 # run the main estpipe programme
 $(WORKDIR)/estpipe.log: $(WORKDIR)/repeat_ids $(RAWDIR)/bab.fa $(DATADIR)/uniprot_human.fa \
@@ -110,10 +110,10 @@ $(DONEDIR)/done: $(WORKDIR)/estpipe.log $(WORKDIR)/libraryname
 
 
 compress: 
-	gzip $(RAWDIR)/* $(WORKDIR)/bab.fa.masked
+	gzip $(RAWDIR)/*
 
 uncompress: 
-	gunzip $(RAWDIR)/* $(WORKDIR)/bab.fa.masked.gz
+	gunzip $(RAWDIR)/*
 
 clean:
 	rm $(DATADIR)/uniprot_human.fa*

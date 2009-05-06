@@ -612,24 +612,26 @@ while ( my $seq = $in->next_seq() ) {
     $homolog =  "\nPUT_ID: H. sapiens $homolog" if $homolog;
 
     # parse the header
-    my %descr = map {/\/([^=]+)=(\w+)/; $1 => $2}  split / /,  $seq->description;
+#    my %descr = map {/\/([^=]+)=(\w+)/; $1 => $2}  split / /,  $seq->description;
     my ($lib)  =  $seq->description =~ /library_name=([^ ]+)/;
-    my $cloneid = $descr{clone_insert_id};
-    my $plateid = $descr{growth_plate_barcode};
+    $lib ||=  '_libname_';
+#    my $cloneid = $seq->description =~ /uaccno=([^ ]+)/
+    my $cloneid ||='_cloneid_';
+#    my $plateid = $descr{growth_plate_barcode};
 
-    my $sense = $descr{direction};
+#    my $sense = $descr{direction};
     #        print Dumper $sense, $CONFIG->{primer}; exit;
-    my $primer = $CONFIG->{primer}->{$sense};
+#    my $primer = $CONFIG->{primer}->{$sense};
 
-    my $p_end;
-    if ($sense eq 'forward') {
-	$p_end = "3'";
-    } else {
-	$p_end = "5'";
-    }
-
-    my ( $row, $column) = 
-    $descr{sequencer_plate_well_coordinates} =~ /([A-Z]+)(\d+)/;
+#    my $p_end;
+#    if ($sense eq 'forward') {
+#	$p_end = "3'";
+#    } else {
+#	$p_end = "5'";
+#    }
+#
+#    my ( $row, $column) = 
+#    $descr{sequencer_plate_well_coordinates} =~ /([A-Z]+)(\d+)/;
     my $seqstring = wrap('', '', $seq->seq); # defaults to 75 characters
 
 
@@ -643,11 +645,6 @@ EST#: $estid
 CLONE: $cloneid
 SOURCE: Bumgarner Lab, Department of Microbiology, University of Washington
 ERROR: 0.0001
-PLATE: $plateid
-ROW: $row
-COLUMN: $column
-SEQ_PRIMER: $primer
-P_END: $p_end
 DNA_TYPE: cDNA
 PUBLIC:$homolog
 COMMENT:

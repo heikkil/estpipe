@@ -1,4 +1,4 @@
-ESTpipe v0.4
+ESTpipe v0.5
 
 ESTpipe is a pipeline for cleaning, annotating and submitting baboon
 EST sequences into dbEST.
@@ -22,13 +22,16 @@ and can start processing real data.
 
 ANALYSIS STEPS
 
-1. Reject sequences with less than 64 informative residues after masking
-2. Remove linkers from the ends (currently disabled because not needed)
-3. Reject sequences with a match to human michondrial genome
-4. Find a human protein homolog
-5. Write out in dbEST submission format
-6. Process the quality file to match rejected ESTs
-
+0. format reference databases for searching
+1. Mask sequences
+2. Reject sequences with less than given threshold count of
+   informative residues after masking
+3. Remove linkers from the ends (currently disabled because not needed)
+4. Remove low quality residues from ends
+5. Reject sequences with a match to human michondrial genome
+6. Find a human protein homolog
+7. Write out in dbEST submission format
+8. Write out processed seq and quality files
 
 DIRECTORY STRUCTURE
 

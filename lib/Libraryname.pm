@@ -43,13 +43,13 @@ sub set_libraryname {
     }
     close F;
 
-    if ($libraryname) {
-	open F, ">", $librarynamefile or die "Can't open [$librarynamefile]: $!";
-	print F $libraryname;
-    } else {
-	print "\n\tCould not read libraryname from $fastafile\n\n";
-	return 0;
+    if ( not $libraryname) {
+	print "\n\tCould not read libraryname from $fastafile. Using 'library'\n\n";
+	$libraryname = 'library'
     }
+
+    open F, ">", $librarynamefile or die "Can't open [$librarynamefile]: $!";
+    print F $libraryname;
 
 }
 
